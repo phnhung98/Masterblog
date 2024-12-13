@@ -58,7 +58,8 @@ def add():
             "id": get_next_id(),
             "title": title,
             "author": author,
-            "content": content
+            "content": content,
+            "likes": 0
         }
 
         posts = get_posts()
@@ -79,9 +80,8 @@ def delete(post_id):
     if post is None:
         # Post not found
         return "Post not found", 404
-    print(post)
-    posts.remove(post)
 
+    posts.remove(post)
     save_posts(posts)
     return redirect(url_for('index'))
 
@@ -92,7 +92,6 @@ def update(post_id):
 
     # Find the post with the given ID
     post = fetch_post_by_id(post_id, posts)
-    print(f'This is debug post {post}')
 
     if not post:
         return "Post not found", 404
@@ -105,14 +104,35 @@ def update(post_id):
         post['content'] = request.form['content']
 
         # Save the updated posts back to the JSON file
-        with open('blog_posts.json', 'w') as f:
-            json.dump(posts, f, indent=4)
+        save_posts(posts)
 
         # Redirect back to the index page
         return redirect(url_for('index'))
 
     # Render the update form with the current post data
     return render_template('update.html', post=post)
+
+
+@app.route('/like/<int:post_id>', methods=['POST'])
+def like(post_id):
+    # Load the blog posts from the JSON file
+    posts = get_posts()
+
+    # Find the post with the given ID and increment its likes
+    # Find the post with the given ID
+    post = fetch_post_by_id(post_id, posts)
+
+    if not post:
+        return "Post not found", 404
+    if 'likes' not in post:
+        post['likes'] = 0  # Initialize likes if not present
+    post['likes'] += 1
+
+    # Save the updated posts back to the JSON file
+    save_posts(posts)
+
+    # Redirect back to the index page
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

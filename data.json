@@ -1,1 +1,16 @@
-[]
+[
+    {
+        "id": 1,
+        "title": "Test 1",
+        "author": "Nhung Pham",
+        "content": "This is a test content 1",
+        "likes": 6
+    },
+    {
+        "id": 2,
+        "title": "Test 1",
+        "author": "Nhung Pham",
+        "content": "This is a test content 1",
+        "likes": 4
+    }
+]
